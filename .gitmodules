@@ -1,0 +1,9 @@
+[submodule "external/json11"]
+	path = external/json11
+	url = https://github.com/dropbox/json11.git
+[submodule "external/json"]
+	path = external/json
+	url = https://github.com/nlohmann/json.git
+[submodule "external/cpr"]
+	path = external/cpr
+	url = git@github.com:whoshuu/cpr.git
