@@ -11,16 +11,21 @@ namespace arango {
 struct database::impl {
 		std::string host;
 		std::string database;
+		std::string username;
+		std::string password;
 
 		std::string getUrl(const std::string &postfix) {
 			return host + "/_db/" + database + "/_api/" + postfix;
 		}
 };
 
-database::database(const std::string &host, const std::string &database)
+database::database(const std::string &host, const std::string &username,
+									 const std::string &password, const std::string &database)
 	: p(new database::impl)
 {
 	p->host = host;
+	p->username = username;
+	p->password = password;
 	p->database = database;
 }
 
@@ -28,7 +33,8 @@ json database::read_document(const std::string &id)
 {
 	json document;
 
-	auto response = cpr::Get(cpr::Url{p->getUrl("document/" + id)});
+	auto response = cpr::Get(cpr::Url{p->getUrl("document/" + id)},
+													 cpr::Authentication{p->username, p->password});
 	if(response.status_code == 200) {
 		document = json::parse(response.text);
 	}
@@ -41,6 +47,7 @@ bool database::create_document(const std::string &collection, json &document)
 	bool result = false;
 
 	auto response = cpr::Post(cpr::Url{p->getUrl("document")},
+														cpr::Authentication{p->username, p->password},
 														cpr::Parameters{{"collection", collection}},
 														cpr::Body{document.dump(0)});
 	if(response.status_code == 202) {
@@ -60,7 +67,8 @@ bool database::replace_document(const std::string &id, json &document)
 	bool result = false;
 
 	auto response = cpr::Put(cpr::Url{p->getUrl("document/" + id)},
-														cpr::Body{document.dump(0)});
+													 cpr::Authentication{p->username, p->password},
+													 cpr::Body{document.dump(0)});
 	if(response.status_code == 202) {
 		auto respDoc = json::parse(response.text);
 		document["_id"] = respDoc["_id"];
@@ -78,7 +86,8 @@ bool database::patch_document(const std::string &id, const json &document)
 	bool result = false;
 
 	auto response = cpr::Patch(cpr::Url{p->getUrl("document/" + id)},
-														cpr::Body{document.dump(0)});
+														 cpr::Authentication{p->username, p->password},
+														 cpr::Body{document.dump(0)});
 	if(response.status_code == 202) {
 		result = true;
 	}
@@ -90,7 +99,8 @@ bool database::remove_document(const std::string &id)
 {
 	bool result = false;
 
-	auto response = cpr::Delete(cpr::Url{p->getUrl("document/" + id)});
+	auto response = cpr::Delete(cpr::Url{p->getUrl("document/" + id)},
+															cpr::Authentication{p->username, p->password});
 	if(response.status_code == 202) {
 		result = true;
 	}
@@ -102,7 +112,8 @@ json database::read_edge(const std::__cxx11::string &id)
 {
 	json edge;
 
-	auto response = cpr::Get(cpr::Url{p->getUrl("edge/" + id)});
+	auto response = cpr::Get(cpr::Url{p->getUrl("edge/" + id)},
+													 cpr::Authentication{p->username, p->password});
 	if(response.status_code == 200) {
 		edge = json::parse(response.text);
 	}
@@ -116,6 +127,7 @@ bool database::create_edge(const std::string &collection,
 	bool result = false;
 
 	auto response = cpr::Post(cpr::Url{p->getUrl("edge")},
+														cpr::Authentication{p->username, p->password},
 														cpr::Parameters{{"collection", collection},
 																						{"from", from_document.at("_id").get<std::string>()},
 																						{"to", to_document.at("_id").get<std::string>()}},
@@ -137,7 +149,8 @@ bool database::replace_edge(const std::__cxx11::string &id, json &edge)
 	bool result = false;
 
 	auto response = cpr::Put(cpr::Url{p->getUrl("edge/" + id)},
-														cpr::Body{edge.dump(0)});
+													 cpr::Authentication{p->username, p->password},
+													 cpr::Body{edge.dump(0)});
 	if(response.status_code == 202) {
 		auto respDoc = json::parse(response.text);
 		edge["_id"] = respDoc["_id"];
@@ -155,7 +168,8 @@ bool database::patch_edge(const std::__cxx11::string &id, const json &edge)
 	bool result = false;
 
 	auto response = cpr::Patch(cpr::Url{p->getUrl("edge/" + id)},
-														cpr::Body{edge.dump(0)});
+														 cpr::Authentication{p->username, p->password},
+														 cpr::Body{edge.dump(0)});
 	if(response.status_code == 202) {
 		result = true;
 	}
@@ -167,7 +181,8 @@ bool database::remove_edge(const std::__cxx11::string &id)
 {
 	bool result = false;
 
-	auto response = cpr::Delete(cpr::Url{p->getUrl("edge/" + id)});
+	auto response = cpr::Delete(cpr::Url{p->getUrl("edge/" + id)},
+															cpr::Authentication{p->username, p->password});
 	if(response.status_code == 202) {
 		result = true;
 	}
@@ -178,12 +193,15 @@ bool database::remove_edge(const std::__cxx11::string &id)
 query_cursor database::query(const std::string &q)
 {
 	json queryDocument = {{"query", q}, {"count", true}, {"batchSize", 3}};
-	auto response = cpr::Post(cpr::Url{p->getUrl("cursor")}, cpr::Body{queryDocument.dump(0)});
+	auto response = cpr::Post(cpr::Url{p->getUrl("cursor")},
+														cpr::Authentication{p->username, p->password},
+														cpr::Body{queryDocument.dump(0)});
 	json result = json::parse(response.text);
 
 	auto get_more_f = [this, result]() {
 		std::string id = result.at("id").get<std::string>();
-		auto response = cpr::Put(cpr::Url{p->getUrl("cursor/" + id)});
+		auto response = cpr::Put(cpr::Url{p->getUrl("cursor/" + id)},
+														 cpr::Authentication{p->username, p->password});
 		auto newResult = json::parse(response.text);
 		return newResult;
 	};

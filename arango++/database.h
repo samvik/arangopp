@@ -9,7 +9,7 @@ namespace arango {
 class database
 {
 	public:
-		database(const std::string &host, const std::string &database);
+		database(const std::string &host, const std::__cxx11::string &username, const std::__cxx11::string &password, const std::string &database);
 
 		json read_document(const std::string &id);
 		bool create_document(const std::string &collection, json &document);
