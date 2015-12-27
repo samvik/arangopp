@@ -38,4 +38,14 @@ const json &query_cursor::result() const
 	return p->result["result"];
 }
 
+const_query_iterator query_cursor::begin() const
+{
+	return const_query_iterator(p->create_cursor, p->read_next, p->delete_cursor);
+}
+
+const_query_iterator query_cursor::end() const
+{
+	return const_query_iterator();
+}
+
 } // namespace arango

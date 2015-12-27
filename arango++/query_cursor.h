@@ -4,6 +4,8 @@
 #include <memory>
 #include "json.h"
 
+#include "query_iterator.h"
+
 namespace arango {
 
 class query_cursor
@@ -14,6 +16,9 @@ class query_cursor
 		bool get_more();
 
 		const json& result() const;
+
+		const_query_iterator begin() const;
+		const_query_iterator end() const;
 
 	private:
 		struct impl;
