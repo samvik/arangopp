@@ -21,6 +21,16 @@ database::~database()
 	delete p;
 }
 
+json database::list_collections(bool excludeSystem)
+{
+	auto response = cpr::Get(
+				cpr::Authentication{p->username, p->password},
+				cpr::Url{p->getUrl("collection")},
+				cpr::Parameters{{"excludeSystem", excludeSystem?"true":"false"}});
+
+	return json::parse(response.text);
+}
+
 json database::create_collection(json properties)
 {
 	auto response = cpr::Post(
@@ -45,6 +55,60 @@ json database::truncate_collection(const std::string &name)
 	auto response = cpr::Put(
 				cpr::Authentication{p->username, p->password},
 				cpr::Url{p->getUrl("collection/" + name + "/truncate")});
+
+	return json::parse(response.text);
+}
+
+json database::get_collection(const std::string &name)
+{
+	auto response = cpr::Get(
+				cpr::Authentication{p->username, p->password},
+				cpr::Url{p->getUrl("collection/" + name)});
+
+	return json::parse(response.text);
+}
+
+json database::get_collection_properties(const std::string &name)
+{
+	auto response = cpr::Get(
+				cpr::Authentication{p->username, p->password},
+				cpr::Url{p->getUrl("collection/" + name + "/properties")});
+
+	return json::parse(response.text);
+}
+
+json database::get_collection_count(const std::string &name)
+{
+	auto response = cpr::Get(
+				cpr::Authentication{p->username, p->password},
+				cpr::Url{p->getUrl("collection/" + name + "/count")});
+
+	return json::parse(response.text);
+}
+
+json database::get_collection_statisitcs(const std::string &name)
+{
+	auto response = cpr::Get(
+				cpr::Authentication{p->username, p->password},
+				cpr::Url{p->getUrl("collection/" + name + "/figures")});
+
+	return json::parse(response.text);
+}
+
+json database::get_collection_revision_id(const std::string &name)
+{
+	auto response = cpr::Get(
+				cpr::Authentication{p->username, p->password},
+				cpr::Url{p->getUrl("collection/" + name + "/revision")});
+
+	return json::parse(response.text);
+}
+
+json database::get_collection_checksum(const std::string &name)
+{
+	auto response = cpr::Get(
+				cpr::Authentication{p->username, p->password},
+				cpr::Url{p->getUrl("collection/" + name + "/checksum")});
 
 	return json::parse(response.text);
 }

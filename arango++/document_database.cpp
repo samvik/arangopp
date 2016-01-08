@@ -12,61 +12,88 @@ document_database::document_database(const std::string &host, const std::string 
 
 json document_database::read_document(const std::string &id)
 {
-	return database::p->read(database::p->getUrl("document/" + id));
+	auto response = cpr::Get(cpr::Url{database::p->getUrl("document/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password});
+	return json::parse(response.text);
 }
 
-bool document_database::create_document(const std::string &collection, json &document)
+json document_database::create_document(const std::string &collection, const json &document)
 {
-	auto parameters = cpr::Parameters{{"collection", collection}};
-	return database::p->create(database::p->getUrl("document"), document, parameters);
+	auto response = cpr::Post(cpr::Url{database::p->getUrl("document")},
+														cpr::Authentication{database::p->username, database::p->password},
+														cpr::Parameters{{"collection", collection}},
+														cpr::Body{document.dump(0)});
+	return json::parse(response.text);
 }
 
-bool document_database::replace_document(const std::string &id, json &document)
+json document_database::replace_document(const std::string &id, const json &document)
 {
-	return database::p->replace(database::p->getUrl("document/" + id), document);
+	auto response = cpr::Put(cpr::Url{database::p->getUrl("document/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password},
+													 cpr::Body{document.dump(0)});
+	return json::parse(response.text);
 }
 
-bool document_database::patch_document(const std::string &id, const json &document)
+json document_database::patch_document(const std::string &id, const json &document)
 {
-	return database::p->patch(database::p->getUrl("document/" + id), document);
+	auto response = cpr::Patch(cpr::Url{database::p->getUrl("document/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password},
+													 cpr::Body{document.dump(0)});
+	return json::parse(response.text);
 }
 
-bool document_database::remove_document(const std::string &id)
+json document_database::remove_document(const std::string &id)
 {
-	return database::p->remove(database::p->getUrl("document/" + id));
+	auto response = cpr::Delete(cpr::Url{database::p->getUrl("document/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password});
+	return json::parse(response.text);
 }
 
 json document_database::read_edge(const std::string &id)
 {
-	return database::p->read(database::p->getUrl("edge/" + id));
+	auto response = cpr::Get(cpr::Url{database::p->getUrl("edge/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password});
+	return json::parse(response.text);
 }
 
-bool document_database::create_edge(const std::string &collection,
-													 json &edge, const json &from_document,
-													 const json &to_document)
+json document_database::create_edge(const std::string &collection,
+													 const json &document, const json &from,
+													 const json &to)
 {
 	auto parameters = cpr::Parameters{
 		{"collection", collection},
-		{"from", from_document.at("_id").get<std::string>()},
-		{"to", to_document.at("_id").get<std::string>()}
+		{"from", from.at("_id")},
+		{"to", to.at("_id")}
 	};
 
-	return database::p->create(database::p->getUrl("edge"), edge, parameters);
+	auto response = cpr::Post(cpr::Url{database::p->getUrl("edge")},
+														cpr::Authentication{database::p->username, database::p->password},
+														parameters,
+														cpr::Body{document.dump(0)});
+	return json::parse(response.text);
 }
 
-bool document_database::replace_edge(const std::string &id, json &edge)
+json document_database::replace_edge(const std::string &id, const json &document)
 {
-	return database::p->replace(database::p->getUrl("edge/" + id), edge);
+	auto response = cpr::Put(cpr::Url{database::p->getUrl("edge/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password},
+													 cpr::Body{document.dump(0)});
+	return json::parse(response.text);
 }
 
-bool document_database::patch_edge(const std::string &id, const json &edge)
+json document_database::patch_edge(const std::string &id, const json &document)
 {
-	return database::p->patch(database::p->getUrl("edge/" + id), edge);
+	auto response = cpr::Patch(cpr::Url{database::p->getUrl("edge/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password},
+													 cpr::Body{document.dump(0)});
+	return json::parse(response.text);
 }
 
-bool document_database::remove_edge(const std::string &id)
+json document_database::remove_edge(const std::string &id)
 {
-	return database::p->remove(database::p->getUrl("edge/" + id));
+	auto response = cpr::Delete(cpr::Url{database::p->getUrl("edge/" + id)},
+													 cpr::Authentication{database::p->username, database::p->password});
+	return json::parse(response.text);
 }
 
 } // namespace arango

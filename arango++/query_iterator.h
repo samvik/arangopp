@@ -53,11 +53,11 @@ class query_iterator_base
 			++m_position;
 
 			const json &result = m_result_set.at("result");
-			if(m_position >= result.size()) {
-				if(m_result_set["hasMore"].get<bool>()) {
+			if(m_position >= static_cast<int>(result.size())) {
+				if(m_result_set["hasMore"]) {
 
 					//std::cout << m_result_set << std::endl;
-					m_result_set = m_read_next(m_result_set["id"].get<std::string>());
+					m_result_set = m_read_next(m_result_set["id"]);
 					m_position = 0;
 				}
 				else {

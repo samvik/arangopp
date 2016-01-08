@@ -11,22 +11,21 @@ class graph_database : public database
 		graph_database(const std::string &host, const std::string &username,
 									 const std::string &password, const std::string &db,
 									 const std::string &graph);
-
 		~graph_database();
 
 		json read_vertex(const std::string &id);
-		bool create_vertex(const std::string &collection, json &document);
-		bool replace_vertex(const std::string &id, json &document);
-		bool patch_vertex(const std::string &id, const json &document);
-		bool remove_vertex(const std::string &id);
+		json create_vertex(const std::string &collection, const json &document);
+		json replace_vertex(const std::string &id, const json &document);
+		json patch_vertex(const std::string &id, const json &document);
+		json remove_vertex(const std::string &id);
 
 		json read_edge(const std::string &id);
-		bool create_edge(const std::string &collection,
-													 json &document,
-													 const json &from_document, const json &to_document);
-		bool replace_edge(const std::string &id, json &document);
-		bool patch_edge(const std::string &id, const json &document);
-		bool remove_edge(const std::string &id);
+		json create_edge(const std::string &collection, json document,
+													 const json &from, const json &to);
+		json create_edge(const std::string &collection, const json &document);
+		json replace_edge(const std::string &id, json &document);
+		json patch_edge(const std::string &id, const json &document);
+		json remove_edge(const std::string &id);
 
 	private:
 		struct impl;

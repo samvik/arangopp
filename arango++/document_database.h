@@ -12,17 +12,17 @@ public:
 											const std::string &password, const std::string &db);
 
 		json read_document(const std::string &id);
-		bool create_document(const std::string &collection, json &document);
-		bool replace_document(const std::string &id, json &document);
-		bool patch_document(const std::string &id, const json &document);
-		bool remove_document(const std::string &id);
+		json create_document(const std::string &collection, const json &document);
+		json replace_document(const std::string &id, const json &document);
+		json patch_document(const std::string &id, const json &document);
+		json remove_document(const std::string &id);
 
 		json read_edge(const std::string &id);
-		bool create_edge(const std::string &collection, json &edge,
-										 const json &from_document, const json &to_document);
-		bool replace_edge(const std::string &id, json &edge);
-		bool patch_edge(const std::string &id, const json &edge);
-		bool remove_edge(const std::string &id);
+		json create_edge(const std::string &collection, const json &document,
+										 const json &from, const json &to);
+		json replace_edge(const std::string &id, const json &document);
+		json patch_edge(const std::string &id, const json &document);
+		json remove_edge(const std::string &id);
 };
 
 } // namespace arango
