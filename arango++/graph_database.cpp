@@ -20,10 +20,45 @@ graph_database::~graph_database()
 	delete p;
 }
 
+json graph_database::list_graphs()
+{
+	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial")},
+													 database::p->authentication);
+	database::p->validateResponse(response);
+	return json::parse(response.text);
+}
+
+json graph_database::create_graph(json properties)
+{
+	auto response = cpr::Post(cpr::Url{database::p->getUrl("gharial")},
+														database::p->authentication,
+														cpr::Body{properties.dump(0)});
+	database::p->validateResponse(response);
+	return json::parse(response.text);
+}
+
+json graph_database::get_graph(const std::string &graph)
+{
+	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + graph)},
+													 database::p->authentication);
+	database::p->validateResponse(response);
+	return json::parse(response.text);
+}
+
+json graph_database::drop_graph(const std::string &graph, bool drop_collections)
+{
+	auto response = cpr::Delete(cpr::Url{database::p->getUrl("gharial/" + graph)},
+															database::p->authentication,
+															cpr::Parameters{{"dropCollections", drop_collections}});
+	database::p->validateResponse(response);
+	return json::parse(response.text);
+}
+
 json graph_database::read_vertex(const std::string &id)
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/vertex/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password});
+													 database::p->authentication);
+	database::p->validateResponse(response);
 	return json::parse(response.text)["vertex"];
 }
 
@@ -31,38 +66,43 @@ json graph_database::create_vertex( const std::string &collection,
 																	 const json &document)
 {
 	auto response = cpr::Post(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/vertex/" + collection)},
-														cpr::Authentication{database::p->username, database::p->password},
+														database::p->authentication,
 														cpr::Body{document.dump(0)});
+	database::p->validateResponse(response);
 	return json::parse(response.text)["vertex"];
 }
 
 json graph_database::replace_vertex(const std::string &id, const json &document)
 {
 	auto response = cpr::Put(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/vertex/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password},
+													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
+	database::p->validateResponse(response);
 	return json::parse(response.text)["vertex"];
 }
 
 json graph_database::patch_vertex(const std::string &id, const json &document)
 {
 	auto response = cpr::Patch(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/vertex/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password},
+													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
+	database::p->validateResponse(response);
 	return json::parse(response.text)["vertex"];
 }
 
 json graph_database::remove_vertex(const std::string &id)
 {
 	auto response = cpr::Delete(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/vertex/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password});
+													 database::p->authentication);
+	database::p->validateResponse(response);
 	return json::parse(response.text);
 }
 
 json graph_database::read_edge(const std::string &id)
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/edge/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password});
+													 database::p->authentication);
+	database::p->validateResponse(response);
 	return json::parse(response.text)["edge"];
 }
 
@@ -78,31 +118,35 @@ json graph_database::create_edge(const std::string &collection, json document,
 json graph_database::create_edge(const std::string &collection, const json &document)
 {
 	auto response = cpr::Post(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/edge/" + collection)},
-														cpr::Authentication{database::p->username, database::p->password},
+														database::p->authentication,
 														cpr::Body{document.dump(0)});
+	database::p->validateResponse(response);
 	return json::parse(response.text)["edge"];
 }
 
 json graph_database::replace_edge(const std::string &id, json &document)
 {
 	auto response = cpr::Put(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/edge/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password},
+													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
+	database::p->validateResponse(response);
 	return json::parse(response.text)["edge"];
 }
 
 json graph_database::patch_edge(const std::string &id, const json &document)
 {
 	auto response = cpr::Patch(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/edge/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password},
+													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
+	database::p->validateResponse(response);
 	return json::parse(response.text)["edge"];
 }
 
 json graph_database::remove_edge(const std::string &id)
 {
 	auto response = cpr::Delete(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/edge/" + id)},
-													 cpr::Authentication{database::p->username, database::p->password});
+													 database::p->authentication);
+	database::p->validateResponse(response);
 	return json::parse(response.text);
 }
 

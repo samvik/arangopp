@@ -4,8 +4,8 @@
 #include "arango++/document_database.h"
 
 int main(int argc, char **argv) {
-	arango::document_database db("http://localhost:8529", "gen", "gen", "gen");
-	arango::graph_database graph("http://localhost:8529", "gen", "gen", "gen", "gen-graph");
+	arango::document_database db("http://localhost:8529", "user", "user", "gen");
+	arango::graph_database graph("http://localhost:8529", "user", "user", "gen", "gen-graph");
 
 //	// Create document
 //	arango::json doc0{{"name", "John Doe"}};
@@ -81,8 +81,8 @@ int main(int argc, char **argv) {
 //	db.remove_document(p1["_id"]);
 
 
-	std::cout << graph.create_vertex("persona",
-																	 arango::json{{"name", "Karlskrona"}}) << std::endl;
+//	std::cout << graph.create_vertex("persona",
+//																	 arango::json{{"name", "Karlskrona"}}) << std::endl;
 
 //	std::cout << graph.read_vertex(v["_id"]) << std::endl;
 
@@ -109,28 +109,48 @@ int main(int argc, char **argv) {
 	//std::cout << graph.truncate_collection("persona") << std::endl;
 
 
-	auto c0 = graph.create_vertex("persona", arango::json{{"name", "Karlskrona"}});
-	auto c1 = graph.create_vertex("persona", arango::json{{"name", "Göteborg"}});
-	auto c2 = graph.create_vertex("persona", arango::json{{"name", "Lund"}});
+//	auto c0 = graph.create_vertex("persona", arango::json{{"name", "Karlskrona"}});
+//	auto c1 = graph.create_vertex("persona", arango::json{{"name", "Göteborg"}});
+//	auto c2 = graph.create_vertex("persona", arango::json{{"name", "Lund"}});
 
-	std::cout << graph.read_vertex(c1["_id"]) << std::endl;
-	std::cout << "replace " << graph.replace_vertex(c1["_id"], arango::json{{"name", "Kalle Anka"}}) << std::endl;
-	std::cout << "patch " << graph.patch_vertex(c1["_id"], arango::json{{"hello", "world"}}) << std::endl;
-	std::cout << graph.read_vertex(c1["_id"]) << std::endl;
+//	std::cout << graph.read_vertex(c1["_id"]) << std::endl;
+//	std::cout << "replace " << graph.replace_vertex(c1["_id"], arango::json{{"name", "Kalle Anka"}}) << std::endl;
+//	std::cout << "patch " << graph.patch_vertex(c1["_id"], arango::json{{"hello", "world"}}) << std::endl;
+//	std::cout << graph.read_vertex(c1["_id"]) << std::endl;
 
-	std::cout << c0 << std::endl;
-	std::cout << c1 << std::endl;
-	std::cout << c2 << std::endl;
+//	std::cout << c0 << std::endl;
+//	std::cout << c1 << std::endl;
+//	std::cout << c2 << std::endl;
 
-	auto e0 = graph.create_edge("relation", arango::json{{"distance", 250}}, c0, c1);
-	auto e1 = graph.create_edge("relation", arango::json{{"distance", 300}}, c1, c2);
-	auto e2 = graph.create_edge("relation", arango::json{{"distance", 200}}, c2, c0);
+//	auto e0 = graph.create_edge("relation", arango::json{{"distance", 250}}, c0, c1);
+//	auto e1 = graph.create_edge("relation", arango::json{{"distance", 300}}, c1, c2);
+//	auto e2 = graph.create_edge("relation", arango::json{{"distance", 200}}, c2, c0);
 
-	std::cout << e0 << std::endl;
-	std::cout << e1 << std::endl;
-	std::cout << e2 << std::endl;
+//	std::cout << e0 << std::endl;
+//	std::cout << e1 << std::endl;
+//	std::cout << e2 << std::endl;
 
-	std::cout << "remove " << graph.remove_vertex(c1["_id"]) << std::endl;
+	//std::cout << graph.list_graphs() << std::endl;
+
+
+	auto graphInfo = graph.get_graph("myGraph");
+	if(graphInfo["error"]) {
+		auto graphDef =  arango::json{
+			{"name", "myGraph"},
+			{"edgeDefinitions", {
+				 {{"collection", "myEdges"},
+				 {"from", {"myVertex1"}},
+				 {"to", {"myVertex2"}}}
+			 }
+			},
+			{"orphanCollections", ""}
+		};
+		std::cout << graph.create_graph(graphDef) << std::endl;
+	}
+
+
+
+	//std::cout << "remove " << graph.remove_vertex(c1["_id"]) << std::endl;
 
 
 
