@@ -34,10 +34,6 @@ class query_iterator_base
 			}
 		}
 
-//		template <class OtherValue>
-//		query_iterator_base(query_iterator_base<OtherValue> const& other)
-//			: m_node(other.m_node) {}
-
 	private:
 		friend class boost::iterator_core_access;
 		template <class> friend class query_iterator_base;
@@ -55,8 +51,6 @@ class query_iterator_base
 			const json &result = m_result_set.at("result");
 			if(m_position >= static_cast<int>(result.size())) {
 				if(m_result_set["hasMore"]) {
-
-					//std::cout << m_result_set << std::endl;
 					m_result_set = m_read_next(m_result_set["id"]);
 					m_position = 0;
 				}

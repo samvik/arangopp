@@ -20,6 +20,11 @@ graph_database::~graph_database()
 	delete p;
 }
 
+std::string graph_database::graph_name() const
+{
+	return p->graph;
+}
+
 json graph_database::list_graphs()
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial")},
@@ -28,7 +33,7 @@ json graph_database::list_graphs()
 	return json::parse(response.text);
 }
 
-json graph_database::create_graph(json properties)
+json graph_database::create_graph(json properties) const
 {
 	auto response = cpr::Post(cpr::Url{database::p->getUrl("gharial")},
 														database::p->authentication,
@@ -37,7 +42,7 @@ json graph_database::create_graph(json properties)
 	return json::parse(response.text);
 }
 
-json graph_database::get_graph(const std::string &graph)
+json graph_database::get_graph(const std::string &graph) const
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + graph)},
 													 database::p->authentication);
@@ -45,11 +50,11 @@ json graph_database::get_graph(const std::string &graph)
 	return json::parse(response.text);
 }
 
-json graph_database::drop_graph(const std::string &graph, bool drop_collections)
+json graph_database::drop_graph(const std::string &graph, bool drop_collections) const
 {
 	auto response = cpr::Delete(cpr::Url{database::p->getUrl("gharial/" + graph)},
 															database::p->authentication,
-															cpr::Parameters{{"dropCollections", drop_collections}});
+															cpr::Parameters{{"dropCollections", drop_collections?"true":"false"}});
 	database::p->validateResponse(response);
 	return json::parse(response.text);
 }

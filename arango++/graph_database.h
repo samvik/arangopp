@@ -13,11 +13,13 @@ class graph_database : public database
 									 const std::string &graph);
 		~graph_database();
 
+		std::string graph_name() const;
+
 		json list_graphs();
 
-		json create_graph(json properties);
-		json get_graph(const std::string &graph);
-		json drop_graph(const std::string &graph, bool drop_collections = true);
+		json create_graph(json properties) const;
+		json get_graph(const std::string &graph) const;
+		json drop_graph(const std::string &graph, bool drop_collections = true) const;
 
 		json read_vertex(const std::string &id);
 		json create_vertex(const std::string &collection, const json &document);

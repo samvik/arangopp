@@ -14,7 +14,8 @@ set_target_properties (arango++ PROPERTIES
 
 target_include_directories(arango++
 	PRIVATE ./ ${CPR_INCLUDE_DIRS}
-	PUBLIC ${CMAKE_SOURCE_DIR}/external/json/src)
+	PUBLIC ${arango++_SOURCE_DIR}
+	PUBLIC ${arango++_SOURCE_DIR}/external/json/src)
 target_link_libraries(arango++ ${CPR_LIBRARIES})
 
 # Install

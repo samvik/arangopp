@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run -i -t --rm -p 8529:8529 -v $(pwd)/config:/etc/arangodb arangodb:latest
+docker run -i -t --rm -p 8529:8529 -v $(pwd)/config:/etc/arangodb -v $(pwd)/data:/var/lib/arangodb arangodb:latest

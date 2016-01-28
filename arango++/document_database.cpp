@@ -68,8 +68,8 @@ json document_database::create_edge(const std::string &collection,
 {
 	auto parameters = cpr::Parameters{
 		{"collection", collection},
-		{"from", from.at("_id")},
-		{"to", to.at("_id")}
+		{"from", from.at("_id").get<std::string>()},
+		{"to", to.at("_id").get<std::string>()}
 	};
 
 	auto response = cpr::Post(cpr::Url{database::p->getUrl("edge")},
