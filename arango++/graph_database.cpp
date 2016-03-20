@@ -114,8 +114,8 @@ json graph_database::read_edge(const std::string &id)
 json graph_database::create_edge(const std::string &collection, json document,
 																 const json &from, const json &to)
 {
-	document["_to"] = to.at("_id");
-	document["_from"] = from.at("_id");
+	document["_to"] = to["_id"];
+	document["_from"] = from["_id"];
 
 	return create_edge(collection, document);
 }

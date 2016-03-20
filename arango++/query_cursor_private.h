@@ -17,13 +17,32 @@ struct query_cursor::impl {
 		impl(create_cursor_func create_cursor_f, read_next_func get_more_f, delete_cursor_func delete_cursor_f)
 			: create_cursor(create_cursor_f), read_next(get_more_f), delete_cursor(delete_cursor_f)
 		{
-			result = create_cursor_f();
+		}
+
+		~impl()
+		{
+			if(result.is_object() && result.count("id")) {
+				const std::string &id = result["id"].get<std::string>();
+				delete_cursor(id);
+			}
 		}
 
 		bool get_more() {
-			const std::string &id = result["id"].get<std::string>();
-			result = read_next(id);
-			return result["code"].get<unsigned>() == 201;
+			if(result.is_object()) {
+				const std::string &id = result["id"].get<std::string>();
+				result = read_next(id);
+			}
+			else {
+				result = create_cursor();
+			}
+
+			bool ret = false;
+
+			if(result["code"].get<unsigned>() == 201) {
+				ret = result["result"].size() > 0;
+			}
+
+			return ret;
 		}
 
 		create_cursor_func create_cursor;

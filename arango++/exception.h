@@ -9,6 +9,7 @@ namespace arango {
 class exception : public std::exception
 {
 	public:
+		explicit exception();
 		explicit exception(const char* message);
 		explicit exception(const std::string &message);
 		virtual ~exception();
@@ -21,7 +22,13 @@ class exception : public std::exception
 class unauthorized_exception : public exception
 {
 	public:
-		unauthorized_exception();
+		using exception::exception;
+};
+
+class query_exception : public exception
+{
+	public:
+		using exception::exception;
 };
 
 class connection_exception : public exception
@@ -29,6 +36,8 @@ class connection_exception : public exception
 	public:
 		using exception::exception;
 };
+
+
 
 } // namespace arango
 

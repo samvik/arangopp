@@ -11,11 +11,15 @@ namespace arango {
 class query_cursor
 {
 	public:
-		bool is_valid() const;
 		bool has_more() const;
 		bool get_more();
 
+		int count() const;
+		int batch_size() const;
+
 		const json& result() const;
+
+		const json& first();
 
 		const_query_iterator begin() const;
 		const_query_iterator end() const;

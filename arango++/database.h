@@ -27,7 +27,12 @@ class database
 		json get_collection_revision_id(const std::string &name);
 		json get_collection_checksum(const std::string &name);
 
-		query_cursor query(const std::string &q, unsigned batch_size = 10);
+		query_cursor query(const std::string &q, unsigned batch_size = 128);
+		query_cursor query(const std::string &q, const json &bindVars, unsigned batch_size = 128);
+
+		json list_functions(std::string namespace_ = "");
+		json create_function(std::string name, std::string code, bool isDeterministic = true);
+		json remove_function(std::string name, bool group = false);
 
 	protected:
 		struct impl;

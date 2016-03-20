@@ -16,6 +16,7 @@ struct database::impl {
 
 		std::string getUrl(const std::string &postfix);
 		void validateResponse(const cpr::Response &response);
+		void validateResponse(const arango::json &response);
 };
 }
 

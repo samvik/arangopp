@@ -121,7 +121,12 @@ json database::get_collection_checksum(const std::string &name)
 
 query_cursor database::query(const std::string &q, unsigned batch_size)
 {
-	auto create_cursor = [this, q, batch_size]() {
+	return query(q, json(), batch_size);
+}
+
+query_cursor database::query(const std::string &q, const json &bindVars, unsigned batch_size)
+{
+	auto create_cursor = [this, q, bindVars, batch_size]() {
 
 		json queryDocument = {
 			{"query", q},
@@ -129,12 +134,19 @@ query_cursor database::query(const std::string &q, unsigned batch_size)
 			{"batchSize", batch_size}
 		};
 
+		if(!bindVars.is_null()) {
+			queryDocument["bindVars"] = bindVars;
+		}
+
 		auto response = cpr::Post(cpr::Url{p->getUrl("cursor")},
 															p->authentication,
 															cpr::Body{queryDocument.dump(0)});
 		database::p->validateResponse(response);
 
-		return json::parse(response.text);
+		auto json = json::parse(response.text);
+		database::p->validateResponse(json);
+
+		return json;
 	};
 
 	auto read_next = [this](const std::string &cursor_id) {
@@ -142,7 +154,10 @@ query_cursor database::query(const std::string &q, unsigned batch_size)
 														 p->authentication);
 		database::p->validateResponse(response);
 
-		return json::parse(response.text);
+		auto json = json::parse(response.text);
+		database::p->validateResponse(json);
+
+		return json;
 	};
 
 	auto delete_cursor = [this](const std::string &cursor_id) {
@@ -150,12 +165,56 @@ query_cursor database::query(const std::string &q, unsigned batch_size)
 															 p->authentication);
 		database::p->validateResponse(response);
 
-		return json::parse(response.text);
+		auto json = json::parse(response.text);
+		database::p->validateResponse(json);
+
+		return json;
 	};
 
 	return query_cursor(std::make_shared<query_cursor::impl>(create_cursor,
 																													 read_next,
 																													 delete_cursor));
+}
+
+json database::list_functions(std::string namespace_)
+{
+	cpr::Parameters parameters;
+	if(!namespace_.empty()) {
+		parameters.AddParameter({"namespace", namespace_});
+	}
+
+	auto response = cpr::Get(cpr::Url{p->getUrl("aqlfunction")},
+															parameters,
+															p->authentication);
+	database::p->validateResponse(response);
+
+	return json::parse(response.text);
+}
+
+json database::create_function(std::string name, std::string code, bool isDeterministic)
+{
+	json parameters = {
+		{"isDeterministic", isDeterministic},
+		{"code", code},
+		{"name", name}
+	};
+
+	auto response = cpr::Post(cpr::Url{p->getUrl("aqlfunction")},
+														p->authentication,
+														cpr::Body{parameters.dump(0)});
+	database::p->validateResponse(response);
+
+	return json::parse(response.text);
+}
+
+json database::remove_function(std::string name, bool group)
+{
+	auto response = cpr::Delete(cpr::Url{p->getUrl("aqlfunction/" + name)},
+															cpr::Parameters{{"group", group?"true":"false"}},
+															p->authentication);
+	database::p->validateResponse(response);
+
+	return json::parse(response.text);
 }
 
 } // namespace arango
