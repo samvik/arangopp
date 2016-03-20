@@ -16,7 +16,7 @@ target_include_directories(arango++
 	PRIVATE ./ ${CPR_INCLUDE_DIRS}
 	PUBLIC ${arango++_SOURCE_DIR}
 	PUBLIC ${arango++_SOURCE_DIR}/external/json/src)
-target_link_libraries(arango++ ${CPR_LIBRARIES})
+target_link_libraries(arango++ PUBLIC ${CPR_LIBRARIES})
 
 # Install
 install(TARGETS arango++ LIBRARY
