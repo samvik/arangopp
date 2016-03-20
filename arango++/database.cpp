@@ -17,6 +17,42 @@ database::~database()
 	delete p;
 }
 
+
+json database::create(const std::string &database, const std::string &username, const std::string &password)
+{
+
+	json parameters = {
+			{"name", database},
+			{
+					"users",
+					{
+							{{"username", username},
+							{"passwd", password},
+							{"active", true}}
+					}
+			}
+	};
+
+	auto response = cpr::Post(
+			p->authentication,
+			cpr::Url{p->getUrl("database")},
+			cpr::Body(parameters.dump(0)));
+	database::p->validateResponse(response);
+
+	return json::parse(response.text);
+}
+
+json database::drop(const std::string &database)
+{
+	auto response = cpr::Delete(
+			p->authentication,
+			cpr::Url{p->getUrl("database/" + database)});
+	database::p->validateResponse(response);
+
+	return json::parse(response.text);
+}
+
+
 json database::list_collections(bool excludeSystem)
 {
 	auto response = cpr::Get(
@@ -56,6 +92,40 @@ json database::truncate_collection(const std::string &name)
 				cpr::Url{p->getUrl("collection/" + name + "/truncate")});
 	database::p->validateResponse(response);
 
+	return json::parse(response.text);
+}
+
+json database::list_graphs()
+{
+	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial")},
+	                         database::p->authentication);
+	database::p->validateResponse(response);
+	return json::parse(response.text);
+}
+
+json database::create_graph(json properties) const
+{
+	auto response = cpr::Post(cpr::Url{database::p->getUrl("gharial")},
+	                          database::p->authentication,
+	                          cpr::Body{properties.dump(0)});
+	database::p->validateResponse(response);
+	return json::parse(response.text);
+}
+
+json database::get_graph(const std::string &graph) const
+{
+	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + graph)},
+	                         database::p->authentication);
+	database::p->validateResponse(response);
+	return json::parse(response.text);
+}
+
+json database::drop_graph(const std::string &graph, bool drop_collections) const
+{
+	auto response = cpr::Delete(cpr::Url{database::p->getUrl("gharial/" + graph)},
+	                            database::p->authentication,
+	                            cpr::Parameters{{"dropCollections", drop_collections?"true":"false"}});
+	database::p->validateResponse(response);
 	return json::parse(response.text);
 }
 

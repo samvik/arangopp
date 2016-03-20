@@ -10,15 +10,22 @@ class database
 {
 	public:
 		database(const std::string &host, const std::string &username,
-						 const std::string &password, const std::string &database);
+						 const std::string &password, const std::string &database = "_system");
 
 		virtual ~database();
 
-		json list_collections(bool excludeSystem = true);
+		json create(const std::string &database, const std::string &username, const std::string &password);
+		json drop(const std::string &database);
 
+		json list_collections(bool excludeSystem = true);
 		json create_collection(json properties);
 		json drop_collection(const std::string &name);
 		json truncate_collection(const std::string &name);
+
+		json list_graphs();
+		json create_graph(json properties) const;
+		json get_graph(const std::string &graph) const;
+		json drop_graph(const std::string &graph, bool drop_collections = true) const;
 
 		json get_collection(const std::string &name);
 		json get_collection_properties(const std::string &name);

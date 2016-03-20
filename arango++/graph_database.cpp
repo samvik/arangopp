@@ -25,40 +25,6 @@ std::string graph_database::graph_name() const
 	return p->graph;
 }
 
-json graph_database::list_graphs()
-{
-	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial")},
-													 database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
-}
-
-json graph_database::create_graph(json properties) const
-{
-	auto response = cpr::Post(cpr::Url{database::p->getUrl("gharial")},
-														database::p->authentication,
-														cpr::Body{properties.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
-}
-
-json graph_database::get_graph(const std::string &graph) const
-{
-	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + graph)},
-													 database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
-}
-
-json graph_database::drop_graph(const std::string &graph, bool drop_collections) const
-{
-	auto response = cpr::Delete(cpr::Url{database::p->getUrl("gharial/" + graph)},
-															database::p->authentication,
-															cpr::Parameters{{"dropCollections", drop_collections?"true":"false"}});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
-}
-
 json graph_database::read_vertex(const std::string &id)
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + p->graph + "/vertex/" + id)},
