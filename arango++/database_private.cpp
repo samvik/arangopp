@@ -23,8 +23,14 @@ void database::impl::validateResponse(const cpr::Response &response)
 	switch(response.status_code) {
 		case 0: // Connection error
 			throw connection_exception(response.error.message);
+		case 400:
+			throw bad_request_exception(response.error.message);
 		case 401: // Unauthorized
 			throw unauthorized_exception(response.error.message);
+		case 404:
+			throw not_found_exception::(response.error.message);
+		case 409:
+			throw conflict_exception::(response.error.message);
 	}
 }
 

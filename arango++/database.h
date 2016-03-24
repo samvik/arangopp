@@ -14,6 +14,8 @@ class database
 
 		virtual ~database();
 
+		json list();
+		json list_accessible();
 		json create(const std::string &database, const std::string &username, const std::string &password);
 		json drop(const std::string &database);
 

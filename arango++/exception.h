@@ -19,12 +19,6 @@ class exception : public std::exception
 		std::string m_message;
 };
 
-class unauthorized_exception : public exception
-{
-	public:
-		using exception::exception;
-};
-
 class query_exception : public exception
 {
 	public:
@@ -37,7 +31,35 @@ class connection_exception : public exception
 		using exception::exception;
 };
 
+class http_exception : public exception
+{
+	public:
+		using exception::exception;
+};
 
+class bad_request_exception : public http_exception
+{
+	public:
+		using exception::exception;
+};
+
+class unauthorized_exception : public http_exception
+{
+	public:
+		using exception::exception;
+};
+
+class not_found_exception : public http_exception
+{
+	public:
+		using exception::exception;
+};
+
+class conflict_exception : public http_exception
+{
+	public:
+		using exception::exception;
+};
 
 } // namespace arango
 

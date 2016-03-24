@@ -18,6 +18,25 @@ database::~database()
 }
 
 
+json database::list() {
+	auto response = cpr::Get(
+			p->authentication,
+			cpr::Url{p->getUrl("database")});
+	database::p->validateResponse(response);
+
+	return json::parse(response.text);
+}
+
+
+json database::list_accessible() {
+	auto response = cpr::Get(
+			p->authentication,
+			cpr::Url{p->getUrl("database/user")});
+	database::p->validateResponse(response);
+
+	return json::parse(response.text);
+}
+
 json database::create(const std::string &database, const std::string &username, const std::string &password)
 {
 
