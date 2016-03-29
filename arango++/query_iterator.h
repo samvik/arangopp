@@ -16,7 +16,8 @@ class query_iterator_base
 		typedef std::function<json(const std::string&)> read_next_func;
 		typedef std::function<bool(const std::string&)> delete_cursor_func;
 
-		query_iterator_base(): m_position(-1) {
+		query_iterator_base(): m_position(-1)
+		{
 		}
 
 		query_iterator_base(create_cursor_func create_cursor,
@@ -26,7 +27,9 @@ class query_iterator_base
 				m_delete_cursor(delete_cursor)
 		{
 			m_result_set = m_create_cursor();
-			if(m_result_set.size() > 0) {
+
+			json result = m_result_set.at("result");
+			if(result.is_array() && !result.empty()) {
 				m_position = 0;
 			}
 			else {

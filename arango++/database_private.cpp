@@ -28,9 +28,9 @@ void database::impl::validateResponse(const cpr::Response &response)
 		case 401: // Unauthorized
 			throw unauthorized_exception(response.error.message);
 		case 404:
-			throw not_found_exception::(response.error.message);
+			throw not_found_exception(response.error.message);
 		case 409:
-			throw conflict_exception::(response.error.message);
+			throw conflict_exception(response.error.message);
 	}
 }
 
