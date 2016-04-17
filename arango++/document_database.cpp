@@ -14,8 +14,7 @@ json document_database::read_document(const std::string &id)
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("document/" + id)},
 													 database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::create_document(const std::string &collection, const json &document)
@@ -24,8 +23,7 @@ json document_database::create_document(const std::string &collection, const jso
 														database::p->authentication,
 														cpr::Parameters{{"collection", collection}},
 														cpr::Body{document.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::replace_document(const std::string &id, const json &document)
@@ -33,8 +31,7 @@ json document_database::replace_document(const std::string &id, const json &docu
 	auto response = cpr::Put(cpr::Url{database::p->getUrl("document/" + id)},
 													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::patch_document(const std::string &id, const json &document)
@@ -42,24 +39,21 @@ json document_database::patch_document(const std::string &id, const json &docume
 	auto response = cpr::Patch(cpr::Url{database::p->getUrl("document/" + id)},
 													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::remove_document(const std::string &id)
 {
 	auto response = cpr::Delete(cpr::Url{database::p->getUrl("document/" + id)},
 													 database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::read_edge(const std::string &id)
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("edge/" + id)},
 													 database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::create_edge(const std::string &collection,
@@ -76,8 +70,7 @@ json document_database::create_edge(const std::string &collection,
 														database::p->authentication,
 														parameters,
 														cpr::Body{document.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::replace_edge(const std::string &id, const json &document)
@@ -85,8 +78,7 @@ json document_database::replace_edge(const std::string &id, const json &document
 	auto response = cpr::Put(cpr::Url{database::p->getUrl("edge/" + id)},
 													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::patch_edge(const std::string &id, const json &document)
@@ -94,16 +86,14 @@ json document_database::patch_edge(const std::string &id, const json &document)
 	auto response = cpr::Patch(cpr::Url{database::p->getUrl("edge/" + id)},
 													 database::p->authentication,
 													 cpr::Body{document.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json document_database::remove_edge(const std::string &id)
 {
 	auto response = cpr::Delete(cpr::Url{database::p->getUrl("edge/" + id)},
 													 database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 } // namespace arango

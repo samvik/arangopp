@@ -23,6 +23,8 @@ class graph_database : public database
 
 		json read_edge(const std::string &id);
 		json create_edge(const std::string &collection, json document,
+		                 const std::string &from_id, const std::string &to_id);
+		json create_edge(const std::string &collection, json document,
 													 const json &from, const json &to);
 		json create_edge(const std::string &collection, const json &document);
 		json replace_edge(const std::string &id, json &document);

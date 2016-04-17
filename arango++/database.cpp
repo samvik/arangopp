@@ -22,9 +22,7 @@ json database::list() {
 	auto response = cpr::Get(
 			p->authentication,
 			cpr::Url{p->getUrl("database")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 
@@ -32,9 +30,7 @@ json database::list_accessible() {
 	auto response = cpr::Get(
 			p->authentication,
 			cpr::Url{p->getUrl("database/user")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::create(const std::string &database, const std::string &username, const std::string &password)
@@ -56,9 +52,7 @@ json database::create(const std::string &database, const std::string &username, 
 			p->authentication,
 			cpr::Url{p->getUrl("database")},
 			cpr::Body(parameters.dump(0)));
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::drop(const std::string &database)
@@ -66,9 +60,7 @@ json database::drop(const std::string &database)
 	auto response = cpr::Delete(
 			p->authentication,
 			cpr::Url{p->getUrl("database/" + database)});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 
@@ -78,9 +70,7 @@ json database::list_collections(bool excludeSystem)
 				p->authentication,
 				cpr::Url{p->getUrl("collection")},
 				cpr::Parameters{{"excludeSystem", excludeSystem?"true":"false"}});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::create_collection(json properties)
@@ -89,9 +79,7 @@ json database::create_collection(json properties)
 				p->authentication,
 				cpr::Url{p->getUrl("collection")},
 				cpr::Body(properties.dump(0)));
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::drop_collection(const std::string &name)
@@ -99,9 +87,7 @@ json database::drop_collection(const std::string &name)
 	auto response = cpr::Delete(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name)});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::truncate_collection(const std::string &name)
@@ -109,17 +95,14 @@ json database::truncate_collection(const std::string &name)
 	auto response = cpr::Put(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name + "/truncate")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::list_graphs()
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial")},
 	                         database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::create_graph(json properties) const
@@ -127,16 +110,14 @@ json database::create_graph(json properties) const
 	auto response = cpr::Post(cpr::Url{database::p->getUrl("gharial")},
 	                          database::p->authentication,
 	                          cpr::Body{properties.dump(0)});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::get_graph(const std::string &graph) const
 {
 	auto response = cpr::Get(cpr::Url{database::p->getUrl("gharial/" + graph)},
 	                         database::p->authentication);
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::drop_graph(const std::string &graph, bool drop_collections) const
@@ -144,8 +125,7 @@ json database::drop_graph(const std::string &graph, bool drop_collections) const
 	auto response = cpr::Delete(cpr::Url{database::p->getUrl("gharial/" + graph)},
 	                            database::p->authentication,
 	                            cpr::Parameters{{"dropCollections", drop_collections?"true":"false"}});
-	database::p->validateResponse(response);
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::get_collection(const std::string &name)
@@ -153,9 +133,7 @@ json database::get_collection(const std::string &name)
 	auto response = cpr::Get(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name)});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::get_collection_properties(const std::string &name)
@@ -163,9 +141,7 @@ json database::get_collection_properties(const std::string &name)
 	auto response = cpr::Get(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name + "/properties")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::get_collection_count(const std::string &name)
@@ -173,9 +149,7 @@ json database::get_collection_count(const std::string &name)
 	auto response = cpr::Get(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name + "/count")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::get_collection_statisitcs(const std::string &name)
@@ -183,9 +157,7 @@ json database::get_collection_statisitcs(const std::string &name)
 	auto response = cpr::Get(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name + "/figures")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::get_collection_revision_id(const std::string &name)
@@ -193,9 +165,7 @@ json database::get_collection_revision_id(const std::string &name)
 	auto response = cpr::Get(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name + "/revision")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::get_collection_checksum(const std::string &name)
@@ -203,9 +173,7 @@ json database::get_collection_checksum(const std::string &name)
 	auto response = cpr::Get(
 				p->authentication,
 				cpr::Url{p->getUrl("collection/" + name + "/checksum")});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 query_cursor database::query(const std::string &q, unsigned batch_size)
@@ -230,34 +198,19 @@ query_cursor database::query(const std::string &q, const json &bindVars, unsigne
 		auto response = cpr::Post(cpr::Url{p->getUrl("cursor")},
 															p->authentication,
 															cpr::Body{queryDocument.dump(0)});
-		database::p->validateResponse(response);
-
-		auto json = json::parse(response.text);
-		database::p->validateResponse(json);
-
-		return json;
+		return database::p->validateResponse(response);
 	};
 
 	auto read_next = [this](const std::string &cursor_id) {
 		auto response = cpr::Put(cpr::Url{p->getUrl("cursor/" + cursor_id)},
 														 p->authentication);
-		database::p->validateResponse(response);
-
-		auto json = json::parse(response.text);
-		database::p->validateResponse(json);
-
-		return json;
+		return database::p->validateResponse(response);
 	};
 
 	auto delete_cursor = [this](const std::string &cursor_id) {
 		auto response = cpr::Delete(cpr::Url{p->getUrl("cursor/" + cursor_id)},
 															 p->authentication);
-		database::p->validateResponse(response);
-
-		auto json = json::parse(response.text);
-		database::p->validateResponse(json);
-
-		return json;
+		return database::p->validateResponse(response);
 	};
 
 	return query_cursor(std::make_shared<query_cursor::impl>(create_cursor,
@@ -275,9 +228,7 @@ json database::list_functions(std::string namespace_)
 	auto response = cpr::Get(cpr::Url{p->getUrl("aqlfunction")},
 															parameters,
 															p->authentication);
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::create_function(std::string name, std::string code, bool isDeterministic)
@@ -291,9 +242,7 @@ json database::create_function(std::string name, std::string code, bool isDeterm
 	auto response = cpr::Post(cpr::Url{p->getUrl("aqlfunction")},
 														p->authentication,
 														cpr::Body{parameters.dump(0)});
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 json database::remove_function(std::string name, bool group)
@@ -301,9 +250,7 @@ json database::remove_function(std::string name, bool group)
 	auto response = cpr::Delete(cpr::Url{p->getUrl("aqlfunction/" + name)},
 															cpr::Parameters{{"group", group?"true":"false"}},
 															p->authentication);
-	database::p->validateResponse(response);
-
-	return json::parse(response.text);
+	return database::p->validateResponse(response);
 }
 
 } // namespace arango
